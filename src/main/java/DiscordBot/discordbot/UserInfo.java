@@ -1,22 +1,39 @@
 package DiscordBot.discordbot;
 
 import java.awt.Color;
+
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+//import net.dv8tion.jda.core.EmbedBuilder;
+//import net.dv8tion.jda.core.entities.Guild;
+//import net.dv8tion.jda.core.entities.Member;
+//import net.dv8tion.jda.core.entities.Message;
+//import net.dv8tion.jda.core.entities.MessageChannel;
+//import net.dv8tion.jda.core.entities.MessageEmbed;
+//import net.dv8tion.jda.core.entities.User;
+//import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+//import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.AudioManager;
 /*
  * class that gets user info of someone
  */
@@ -26,10 +43,10 @@ public class UserInfo extends ListenerAdapter{
 
 	public MessageEmbed userInfo(User user) {
 		String months[] = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
-		String[] userCreated = user.getCreationTime().toString().split("-");
+		String[] userCreated = user.getTimeCreated().toString().split("-");
 		String finalString = months[Integer.valueOf(userCreated[1]) - 1] + " " + userCreated[2].substring(0,2) + ", " + userCreated[0];
 
-		System.out.println(user.getCreationTime().toString());
+		System.out.println(user.getTimeCreated().toString());
 
 		//create new embed that sends user info
 		MessageEmbed embed = new EmbedBuilder()
@@ -51,8 +68,8 @@ public class UserInfo extends ListenerAdapter{
 		Guild objGuild = e.getGuild();
 		MessageChannel objChannel = e.getChannel();
 
-		if(objMsg.getContent().charAt(0) == '/') {
-			String[] strArgs = objMsg.getContent().split(" ", 2);
+		if(objMsg.getContentRaw().charAt(0) == '/') {
+			String[] strArgs = objMsg.getContentRaw().split(" ", 2);
 			if(strArgs[0].equals("/userinfo") && strArgs.length == 1) {
 				objChannel.sendMessage(userInfo(objUser)).queue();
 			} else if(strArgs[0].equals("/userinfo")){

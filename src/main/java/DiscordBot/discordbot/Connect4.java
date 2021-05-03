@@ -1,14 +1,32 @@
 package DiscordBot.discordbot;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+//import net.dv8tion.jda.core.entities.Guild;
+//import net.dv8tion.jda.core.entities.Message;
+//import net.dv8tion.jda.core.entities.MessageChannel;
+//import net.dv8tion.jda.core.entities.User;
+//import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+//import net.dv8tion.jda.core.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.AudioManager;
 
 
 /*
@@ -23,6 +41,7 @@ public class Connect4 extends ListenerAdapter{
 	List<Connect4Game> games = new ArrayList<Connect4Game>();
 	List<BigConnect4Game> bigGames = new ArrayList<BigConnect4Game>();
 	List<BigConnect4Game> singleGames = new ArrayList<BigConnect4Game>();
+	JDA jda;
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent e) {
@@ -32,9 +51,9 @@ public class Connect4 extends ListenerAdapter{
 		Guild guild = e.getGuild();
 
 		//if the message received is a command then...
-		if(msg.getContent().charAt(0) == commandPrefix) {
+		if(msg.getContentRaw().charAt(0) == commandPrefix) {
 
-			String[] strArgs = msg.getContent().substring(1).split(" ");
+			String[] strArgs = msg.getContentRaw().substring(1).split(" ");
 
 			//initialize a new connect4 game (smol)
 			if(strArgs[0].toLowerCase().equals("connect4") && (findExistingGame(channel) == false)) {
@@ -54,9 +73,12 @@ public class Connect4 extends ListenerAdapter{
 
 				//initialize big connect4 game
 			} else if(strArgs[0].toLowerCase().equals("bigconnect4") && (findExistingGame(channel) == false)) {
+				
+				//System.out.println("str args1: " + strArgs[1] + " name: " + jda.retrieveUserById(strArgs[1]));
+				
 				if(!(user.equals(commands.searchMembers(strArgs[1], guild).get(0).getUser()))) {
-				bigGames.add(new BigConnect4Game(channel, user, commands.searchMembers(strArgs[1], guild).get(0).getUser(), false));
-				channel.sendMessage(user.getAsMention() + ", " + findBigGame(channel, user).getP2().getAsMention() + " Connect four duel!"
+					bigGames.add(new BigConnect4Game(channel, user, commands.searchMembers(strArgs[1], guild).get(0).getUser(), false));
+					channel.sendMessage(user.getAsMention() + ", " + findBigGame(channel, user).getP2().getAsMention() + " Connect four duel!"
 						+ "\nUse /drop (column) to move. eg: /drop 2").queue();
 				} else if(user.equals(commands.searchMembers(strArgs[1], guild).get(0).getUser())) {
 					channel.sendMessage("Please use the command /singleplayerbigconnect4 to play connect four with yourself" + user.getAsMention()).queue();

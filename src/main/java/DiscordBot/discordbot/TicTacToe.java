@@ -1,15 +1,33 @@
 package DiscordBot.discordbot;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+//import net.dv8tion.jda.core.entities.Guild;
+//import net.dv8tion.jda.core.entities.Member;
+//import net.dv8tion.jda.core.entities.Message;
+//import net.dv8tion.jda.core.entities.MessageChannel;
+//import net.dv8tion.jda.core.entities.User;
+//import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+//import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.AudioManager;
 
 /*
  * main tic tac toe class, basically the same as small connect 4
@@ -31,8 +49,8 @@ public class TicTacToe extends ListenerAdapter{
 
 
 		//Commands
-		if(msg.getContent().charAt(0) == commandPrefix) {
-			String[] strArgs = msg.getContent().substring(1).split(" ");
+		if(msg.getContentRaw().charAt(0) == commandPrefix) {
+			String[] strArgs = msg.getContentRaw().substring(1).split(" ");
 			if(strArgs[0].toLowerCase().equals("tictactoe") && (findExistingGame(channel) == false)) {
 				games.add(new TicTacToeGame(channel, user, commands.searchMembers(strArgs[1], guild).get(0).getUser()));
 				channel.sendMessage(user.getAsMention() + ", " + findGame(channel, user).getP2().getAsMention() + " Tic tac toe duel!"

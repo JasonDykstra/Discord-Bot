@@ -1,21 +1,16 @@
 package DiscordBot.discordbot;
 
 import java.awt.Color;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import javax.security.auth.login.LoginException;
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
@@ -23,24 +18,38 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
 
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.EmbedBuilder;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.MessageEmbed;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.entities.VoiceChannel;
-import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.managers.AudioManager;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.AudioManager;
+
+//import net.dv8tion.jda.core.AccountType;
+//import net.dv8tion.jda.core.EmbedBuilder;
+//import net.dv8tion.jda.core.JDA;
+//import net.dv8tion.jda.core.JDABuilder;
+//import net.dv8tion.jda.core.entities.Guild;
+//import net.dv8tion.jda.core.entities.Member;
+//import net.dv8tion.jda.core.entities.Message;
+//import net.dv8tion.jda.core.entities.MessageChannel;
+//import net.dv8tion.jda.core.entities.MessageEmbed;
+//import net.dv8tion.jda.core.entities.PrivateChannel;
+//import net.dv8tion.jda.core.entities.TextChannel;
+//import net.dv8tion.jda.core.entities.User;
+//import net.dv8tion.jda.core.entities.VoiceChannel;
+//import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
+//import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+//import net.dv8tion.jda.core.exceptions.RateLimitedException;
+//import net.dv8tion.jda.core.hooks.ListenerAdapter;
+//import net.dv8tion.jda.core.managers.AudioManager;
 
 
 /*
@@ -49,21 +58,31 @@ import net.dv8tion.jda.core.managers.AudioManager;
  */
 
 public class App extends ListenerAdapter {
-	public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException, RateLimitedException{
+	public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException{
 
 		//initialize all the event listeners aka all the other classes
 		//jdaBot is the key to my bot that is provided by discord, if someone else uses it they can control my bot,
 		//i removed the key so you dont give it away or accidentally run the program and break the bot
 		//its not that i dont trust u but its important to me sorry :(
-		JDA jdaBot = new JDABuilder(AccountType.BOT).setToken("hidden").buildBlocking();
-		jdaBot.addEventListener(new App());
-		jdaBot.addEventListener(new Commands());
-		jdaBot.addEventListener(new HelpCommand());
-		jdaBot.addEventListener(new TextPhrases());
-		jdaBot.addEventListener(new UserInfo());
-		jdaBot.addEventListener(new TicTacToe());
-		jdaBot.addEventListener(new PatchNotes());
-		jdaBot.addEventListener(new Connect4());
+//		JDA jdaBot = new JDABuilder(AccountType.BOT).setToken("MzUyNTk5OTk2NjM1NTQ1NjEy.WadOVg.eS1l46uCdU20r1BHHMYtierdRLc").buildBlocking();
+//		jdaBot.addEventListener(new App());
+//		jdaBot.addEventListener(new Commands());
+//		jdaBot.addEventListener(new HelpCommand());
+//		jdaBot.addEventListener(new TextPhrases());
+//		jdaBot.addEventListener(new UserInfo());
+//		jdaBot.addEventListener(new TicTacToe());
+//		jdaBot.addEventListener(new PatchNotes());
+//		jdaBot.addEventListener(new Connect4());
+		JDABuilder.createDefault("MzUyNTk5OTk2NjM1NTQ1NjEy.WadOVg.eS1l46uCdU20r1BHHMYtierdRLc")
+		.addEventListeners(new App())
+		.addEventListeners(new Commands())
+		.addEventListeners(new HelpCommand())
+		.addEventListeners(new TextPhrases())
+		.addEventListeners(new UserInfo())
+		.addEventListeners(new TicTacToe())
+		.addEventListeners(new PatchNotes())
+		.addEventListeners(new Connect4())
+		.build();
 	}
 
 	public static App app = new App();
@@ -84,8 +103,7 @@ public class App extends ListenerAdapter {
 			musicManager = new GuildMusicManager(playerManager);
 			musicManagers.put(guildId, musicManager);
 		}
-
-		guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
+		//guild.getAudioManager().setSendingHandler(musicManager.getSendHandler());
 
 		return musicManager;
 	}
@@ -106,7 +124,7 @@ public class App extends ListenerAdapter {
 	//Commands for music
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		String[] command = event.getMessage().getContent().split(" ", 2);
+		String[] command = event.getMessage().getContentRaw().split(" ", 2);
 		if(command[0].equals("/play")){
 			lastMessageChannel = event.getChannel();
 			app.lastMessageChannel = event.getChannel();

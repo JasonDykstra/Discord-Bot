@@ -6,16 +6,33 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageChannel;
-import net.dv8tion.jda.core.entities.MessageHistory;
-import net.dv8tion.jda.core.entities.TextChannel;
-import net.dv8tion.jda.core.entities.User;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
+//import net.dv8tion.jda.core.entities.Guild;
+//import net.dv8tion.jda.core.entities.Member;
+//import net.dv8tion.jda.core.entities.Message;
+//import net.dv8tion.jda.core.entities.MessageChannel;
+//import net.dv8tion.jda.core.entities.MessageHistory;
+//import net.dv8tion.jda.core.entities.TextChannel;
+//import net.dv8tion.jda.core.entities.User;
+//import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+//import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
+//import net.dv8tion.jda.core.hooks.ListenerAdapter;
+
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.VoiceChannel;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.AudioManager;
 
 /*
  * all the commands for the bot go in here, thats all the responses to anything starting with "/"
@@ -44,10 +61,14 @@ public class Commands extends ListenerAdapter {
 				objMsg.delete().queue();
 			}
 		}
+		
+		System.out.println("content raw: " + objMsg.getContentRaw());
 
 		//detect commands
-		if(objMsg.getContent().charAt(0) == commandPrefix) {
-			String[] strArgs = objMsg.getContent().substring(1).split(" ");
+		if(objMsg.getContentRaw().charAt(0) == commandPrefix) {
+			String[] strArgs = objMsg.getContentRaw().substring(1).split(" ");
+			
+			System.out.println("command: " + strArgs[0]);
 
 			//Don't let robin use commands
 			//also dont let muted people use commands
@@ -93,8 +114,8 @@ public class Commands extends ListenerAdapter {
 					//damn am I proud of this one liner...
 					history.retrievePast(limit).queue(messages -> {
 						List<Message> filtered = messages.stream().filter(message -> 
-						("352599996635545612".equals(message.getAuthor().getId()) || message.getContent().startsWith("/"))
-						&& message.getCreationTime().isAfter(OffsetDateTime.now().minusWeeks(2))).collect(Collectors.toList());
+						("352599996635545612".equals(message.getAuthor().getId()) || message.getContentRaw().startsWith("/"))
+						&& message.getTimeCreated().isAfter(OffsetDateTime.now().minusWeeks(2))).collect(Collectors.toList());
 						objChannel.deleteMessages(filtered).queue();
 					});
 
@@ -115,8 +136,8 @@ public class Commands extends ListenerAdapter {
 					}
 
 					history.retrievePast(limit).queue(messages -> {
-						messages.stream().filter(message -> message.getCreationTime().isAfter(OffsetDateTime.now().minusWeeks(2))).collect(Collectors.toList());
-						objChannel.deleteMessages(messages.stream().filter(message -> message.getCreationTime().isAfter(OffsetDateTime.now().minusWeeks(2))).collect(Collectors.toList())).queue();
+						messages.stream().filter(message -> message.getTimeCreated().isAfter(OffsetDateTime.now().minusWeeks(2))).collect(Collectors.toList());
+						objChannel.deleteMessages(messages.stream().filter(message -> message.getTimeCreated().isAfter(OffsetDateTime.now().minusWeeks(2))).collect(Collectors.toList())).queue();
 					});
 
 
