@@ -1,0 +1,8 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        // "/Users/jasondykstra/Desktop/Programming/Eclipse/discordbot/src/main/java/DiscordBot/junit-4.10.jar",
+        "/Users/jasondykstra/Desktop/Programming/Eclipse/discordbot/src/main/java/DiscordBot/junit-jupiter-api-5.7.2.jar"
+    ]
+}

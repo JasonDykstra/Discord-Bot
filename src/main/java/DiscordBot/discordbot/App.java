@@ -2,6 +2,7 @@ package DiscordBot.discordbot;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,26 +32,7 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.managers.AudioManager;
-
-//import net.dv8tion.jda.core.AccountType;
-//import net.dv8tion.jda.core.EmbedBuilder;
-//import net.dv8tion.jda.core.JDA;
-//import net.dv8tion.jda.core.JDABuilder;
-//import net.dv8tion.jda.core.entities.Guild;
-//import net.dv8tion.jda.core.entities.Member;
-//import net.dv8tion.jda.core.entities.Message;
-//import net.dv8tion.jda.core.entities.MessageChannel;
-//import net.dv8tion.jda.core.entities.MessageEmbed;
-//import net.dv8tion.jda.core.entities.PrivateChannel;
-//import net.dv8tion.jda.core.entities.TextChannel;
-//import net.dv8tion.jda.core.entities.User;
-//import net.dv8tion.jda.core.entities.VoiceChannel;
-//import net.dv8tion.jda.core.events.guild.voice.GuildVoiceLeaveEvent;
-//import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-//import net.dv8tion.jda.core.exceptions.RateLimitedException;
-//import net.dv8tion.jda.core.hooks.ListenerAdapter;
-//import net.dv8tion.jda.core.managers.AudioManager;
-
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 /*
  * main class for the bot, music stuff has to go here due to lavaplayer libraries.
@@ -64,16 +46,10 @@ public class App extends ListenerAdapter {
 		//jdaBot is the key to my bot that is provided by discord, if someone else uses it they can control my bot,
 		//i removed the key so you dont give it away or accidentally run the program and break the bot
 		//its not that i dont trust u but its important to me sorry :(
-//		JDA jdaBot = new JDABuilder(AccountType.BOT).setToken("MzUyNTk5OTk2NjM1NTQ1NjEy.WadOVg.eS1l46uCdU20r1BHHMYtierdRLc").buildBlocking();
-//		jdaBot.addEventListener(new App());
-//		jdaBot.addEventListener(new Commands());
-//		jdaBot.addEventListener(new HelpCommand());
-//		jdaBot.addEventListener(new TextPhrases());
-//		jdaBot.addEventListener(new UserInfo());
-//		jdaBot.addEventListener(new TicTacToe());
-//		jdaBot.addEventListener(new PatchNotes());
-//		jdaBot.addEventListener(new Connect4());
-		JDABuilder.createDefault("MzUyNTk5OTk2NjM1NTQ1NjEy.WadOVg.eS1l46uCdU20r1BHHMYtierdRLc")
+
+		// Have to enable all intents as this wonky enum set so that the bot can have permission to do things
+		// such as getting members, listing message history, etc.
+		JDABuilder.createDefault("MzUyNTk5OTk2NjM1NTQ1NjEy.WadOVg.eS1l46uCdU20r1BHHMYtierdRLc", EnumSet.allOf(GatewayIntent.class))
 		.addEventListeners(new App())
 		.addEventListeners(new Commands())
 		.addEventListeners(new HelpCommand())
@@ -87,7 +63,7 @@ public class App extends ListenerAdapter {
 
 	public static App app = new App();
 	private final AudioPlayerManager playerManager = new DefaultAudioPlayerManager();
-	private final Map<Long, GuildMusicManager> musicManagers = new HashMap<>();
+	private final Map<Long, GuildMusicManager> musicManagers = new HashMap<Long, GuildMusicManager>();
 	public MessageChannel lastMessageChannel;
 
 	public App() {
@@ -304,18 +280,18 @@ public class App extends ListenerAdapter {
 	}
 
 	//the main function for grabbing a song from youtube, loading it and playing it over voice chat
-	private void loadAndPlay(final TextChannel channel, final String trackUrl, User user) {
-		GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
+	private void loadAndPlay(final TextChannel channel, final String trackUrl, final User user) {
+		final GuildMusicManager musicManager = getGuildAudioPlayer(channel.getGuild());
 
 		playerManager.loadItemOrdered(musicManager, trackUrl, new AudioLoadResultHandler() {
-			@Override
+			// @Override
 			public void trackLoaded(AudioTrack track) {
 				channel.sendMessage("Adding to queue " + track.getInfo().title).queue();
 
 				play(channel.getGuild(), musicManager, track, user);
 			}
 
-			@Override
+			// @Override
 			public void playlistLoaded(AudioPlaylist playlist) {
 				AudioTrack firstTrack = playlist.getSelectedTrack();
 
@@ -328,12 +304,12 @@ public class App extends ListenerAdapter {
 				play(channel.getGuild(), musicManager, firstTrack, user);
 			}
 
-			@Override
+			// @Override
 			public void noMatches() {
 				channel.sendMessage("Nothing found by " + trackUrl).queue();
 			}
 
-			@Override
+			// @Override
 			public void loadFailed(FriendlyException exception) {
 				channel.sendMessage("Could not play: " + exception.getMessage()).queue();
 			}
@@ -355,14 +331,14 @@ public class App extends ListenerAdapter {
 
 	//connects to first voice channel in a server
 	//Who would use this tbh, came with demo
-	private void connectToFirstVoiceChannel(AudioManager audioManager) {
-		if (!audioManager.isConnected() && !audioManager.isAttemptingToConnect()) {
-			for (VoiceChannel voiceChannel : audioManager.getGuild().getVoiceChannels()) {
-				audioManager.openAudioConnection(voiceChannel);
-				break;
-			}
-		}
-	}
+	// private void connectToFirstVoiceChannel(AudioManager audioManager) {
+	// 	if (!audioManager.isConnected() && !audioManager.isAttemptingToConnect()) {
+	// 		for (VoiceChannel voiceChannel : audioManager.getGuild().getVoiceChannels()) {
+	// 			audioManager.openAudioConnection(voiceChannel);
+	// 			break;
+	// 		}
+	// 	}
+	// }
 
 	//Connects to the voice channel that the user who requested the command is in
 	private void join(AudioManager audioManager, User user) {

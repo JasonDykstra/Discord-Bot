@@ -1,39 +1,16 @@
 package DiscordBot.discordbot;
-
 import java.awt.Color;
-
-import java.sql.Date;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-//import net.dv8tion.jda.core.EmbedBuilder;
-//import net.dv8tion.jda.core.entities.Guild;
-//import net.dv8tion.jda.core.entities.Member;
-//import net.dv8tion.jda.core.entities.Message;
-//import net.dv8tion.jda.core.entities.MessageChannel;
-//import net.dv8tion.jda.core.entities.MessageEmbed;
-//import net.dv8tion.jda.core.entities.User;
-//import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
-//import net.dv8tion.jda.core.hooks.ListenerAdapter;
-
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.MessageHistory;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.managers.AudioManager;
 /*
  * class that gets user info of someone
  */
@@ -65,7 +42,7 @@ public class UserInfo extends ListenerAdapter{
 	public void onMessageReceived(MessageReceivedEvent e) {
 		Message objMsg = e.getMessage();
 		User objUser = e.getAuthor();
-		Guild objGuild = e.getGuild();
+		// Guild objGuild = e.getGuild();
 		MessageChannel objChannel = e.getChannel();
 
 		if(objMsg.getContentRaw().charAt(0) == '/') {
@@ -73,8 +50,10 @@ public class UserInfo extends ListenerAdapter{
 			if(strArgs[0].equals("/userinfo") && strArgs.length == 1) {
 				objChannel.sendMessage(userInfo(objUser)).queue();
 			} else if(strArgs[0].equals("/userinfo")){
-				if(!searchMembers(strArgs[1], objGuild).isEmpty()) {
-					objChannel.sendMessage(userInfo(searchMembers(strArgs[1], objGuild).get(0).getUser())).queue();
+				if(!objMsg.getMentionedMembers().isEmpty()) {
+				//if(!searchMembers(strArgs[1], objGuild).isEmpty()) {
+					//objChannel.sendMessage(userInfo(searchMembers(strArgs[1], objGuild).get(0).getUser())).queue();
+					objChannel.sendMessage(userInfo(objMsg.getMentionedMembers().get(0).getUser())).queue();
 				} else {
 					objChannel.sendMessage("No users found with that name or nickname").queue();
 				}

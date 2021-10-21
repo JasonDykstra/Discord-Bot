@@ -17,22 +17,14 @@ import java.util.stream.Collectors;
 //import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
 //import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.entities.VoiceChannel;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.managers.AudioManager;
 
 /*
  * all the commands for the bot go in here, thats all the responses to anything starting with "/"
@@ -73,7 +65,7 @@ public class Commands extends ListenerAdapter {
 			//Don't let robin use commands
 			//also dont let muted people use commands
 			if(objUser.getId().equals("196409654048325643") || muted.contains(objUser)) {
-				objChannel.sendMessage("stfu " + objUser.getAsMention()).queue();
+				objChannel.sendMessage("shh " + objUser.getAsMention()).queue();
 			} else {
 
 
@@ -98,6 +90,10 @@ public class Commands extends ListenerAdapter {
 				} else if(strArgs[0].toLowerCase().equals("madeby")) {
 					objChannel.sendMessage("Jason Dykstra... I made this!").queue();
 				} else if(strArgs[0].toLowerCase().equals("profilepic")) {
+					
+					// Quick fix
+					objChannel.sendMessage(objMsg.getMentionedMembers().get(0).getUser().getAvatarUrl()).queue();
+					
 					if(strArgs.length == 1) {
 						objChannel.sendMessage(objUser.getAvatarUrl()).queue();
 					} else if(strArgs.length == 2) {
@@ -209,25 +205,44 @@ public class Commands extends ListenerAdapter {
 	
 	//my custom search members command
 	public List<Member> searchMembers(String search, Guild g){
-		ArrayList<Member> exactNames = new ArrayList<>();
-		ArrayList<Member> startsWithNames = new ArrayList<>();
-		ArrayList<Member> containsNames = new ArrayList<>();
-
-		g.getMembers().forEach(m -> {
-			if(m.getUser().getName().equals(search) || m.getEffectiveName().equals(search)) {
-				exactNames.add(m);
-			} else if(m.getUser().getName().toLowerCase().startsWith(search) || m.getEffectiveName().toLowerCase().startsWith(search)) {
-				startsWithNames.add(m);
-			} else if(m.getUser().getName().toLowerCase().contains(search) || m.getEffectiveName().toLowerCase().contains(search)) {
-				containsNames.add(m);
-			}
-		});
-		if(!exactNames.isEmpty()) {
-			return exactNames;
-		} else if(!startsWithNames.isEmpty()) {
-			return startsWithNames;
-		} else {
-			return containsNames;
-		}
+		
+		// Quick fix
+		List<Member> members = g.findMembers(m -> {
+			System.out.println(m.getUser().getName());
+			if(m.getUser().getName().toLowerCase().contains(search)) return true;
+			else return false;
+		}).get();
+		
+//		g.getMembers().forEach(m -> {
+//			System.out.println(m.getUser().getName());
+//			if(m.getUser().getName().toLowerCase().contains(search)) {
+//				members.add(m);
+//			}
+//		});
+		
+		return members;
+		
+		// End quick fix
+		
+//		ArrayList<Member> exactNames = new ArrayList<>();
+//		ArrayList<Member> startsWithNames = new ArrayList<>();
+//		ArrayList<Member> containsNames = new ArrayList<>();
+//
+//		g.getMembers().forEach(m -> {
+//			if(m.getUser().getName().equals(search) || m.getEffectiveName().equals(search)) {
+//				exactNames.add(m);
+//			} else if(m.getUser().getName().toLowerCase().startsWith(search) || m.getEffectiveName().toLowerCase().startsWith(search)) {
+//				startsWithNames.add(m);
+//			} else if(m.getUser().getName().toLowerCase().contains(search) || m.getEffectiveName().toLowerCase().contains(search)) {
+//				containsNames.add(m);
+//			}
+//		});
+//		if(!exactNames.isEmpty()) {
+//			return exactNames;
+//		} else if(!startsWithNames.isEmpty()) {
+//			return startsWithNames;
+//		} else {
+//			return containsNames;
+//		}
 	}
 }
