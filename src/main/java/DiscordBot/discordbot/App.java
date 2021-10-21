@@ -1,5 +1,4 @@
 package DiscordBot.discordbot;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -8,9 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 import javax.security.auth.login.LoginException;
-
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager;
@@ -18,7 +15,7 @@ import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers;
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException;
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist;
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack;
-
+import io.github.cdimascio.dotenv.Dotenv;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -42,6 +39,9 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 public class App extends ListenerAdapter {
 	public static void main( String[] args ) throws LoginException, IllegalArgumentException, InterruptedException{
 
+		// Load dotenv
+		Dotenv dotenv = Dotenv.load();
+
 		//initialize all the event listeners aka all the other classes
 		//jdaBot is the key to my bot that is provided by discord, if someone else uses it they can control my bot,
 		//i removed the key so you dont give it away or accidentally run the program and break the bot
@@ -49,7 +49,7 @@ public class App extends ListenerAdapter {
 
 		// Have to enable all intents as this wonky enum set so that the bot can have permission to do things
 		// such as getting members, listing message history, etc.
-		JDABuilder.createDefault("hidden", EnumSet.allOf(GatewayIntent.class))
+		JDABuilder.createDefault(dotenv.get("BOT_TOKEN"), EnumSet.allOf(GatewayIntent.class))
 		.addEventListeners(new App())
 		.addEventListeners(new Commands())
 		.addEventListeners(new HelpCommand())
