@@ -49,7 +49,7 @@ public class App extends ListenerAdapter {
 
 		// Have to enable all intents as this wonky enum set so that the bot can have permission to do things
 		// such as getting members, listing message history, etc.
-		JDABuilder.createDefault("MzUyNTk5OTk2NjM1NTQ1NjEy.WadOVg.eS1l46uCdU20r1BHHMYtierdRLc", EnumSet.allOf(GatewayIntent.class))
+		JDABuilder.createDefault("hidden", EnumSet.allOf(GatewayIntent.class))
 		.addEventListeners(new App())
 		.addEventListeners(new Commands())
 		.addEventListeners(new HelpCommand())
