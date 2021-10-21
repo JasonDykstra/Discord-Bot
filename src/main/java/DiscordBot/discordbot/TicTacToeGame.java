@@ -20,7 +20,7 @@ public class TicTacToeGame extends ListenerAdapter{
 	private MessageChannel channel;
 	private User lastMove;
 	private int spacesUsed = 0;
-	String winner;
+	String winner = "";
 
 
 	public static void main(String[] args) {

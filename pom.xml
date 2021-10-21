@@ -21,7 +21,7 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
       <version>5.7.2</version>
-      <scope>src/main/java/DiscordBot/test</scope>
+      <scope>test</scope>
   </dependency>
     <dependency>
     	<groupId>net.dv8tion</groupId>
